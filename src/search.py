@@ -1,3 +1,11 @@
+from langchain.prompts import PromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.documents import Document
+from dotenv import load_dotenv
+from utils import get_database_connection, get_llm_model
+
+load_dotenv()
+
 PROMPT_TEMPLATE = """
 CONTEXTO:
 {contexto}
@@ -25,5 +33,32 @@ PERGUNTA DO USUÁRIO:
 RESPONDA A "PERGUNTA DO USUÁRIO"
 """
 
-def search_prompt(question=None):
-    pass
+def format_docs_simple(docs: list[Document]):
+    contexto = ""
+    for (doc, score) in docs:
+        contexto += f"Score: {score}\n"
+        contexto += f"Conteúdo: {doc.page_content}\n"
+        for k, v in doc.metadata.items():
+            contexto += f"{k}: {v}\n"
+    return contexto
+
+def retrieve(question): 
+  db = get_database_connection()
+  results = db.similarity_search_with_score(question, k=10)
+  return results
+
+def search_prompt(question: str):
+    docs = retrieve(question)
+    contexto = format_docs_simple(docs)
+    llm = get_llm_model()
+    
+    prompt = PromptTemplate(
+      input_variables=["contexto", "pergunta"],
+      template=PROMPT_TEMPLATE
+    )
+    
+    pipeline = prompt | llm | StrOutputParser()
+
+    result = pipeline.invoke({"contexto": contexto, "pergunta": question})
+
+    return result
