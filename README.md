@@ -23,16 +23,30 @@ This project follows Clean Architecture principles with SOLID design:
 
 ```
 src/
-├── core/                    # Business logic and domain entities
+├── chat.py                 # Interactive chat interface for document Q&A
+├── ingest.py               # PDF document ingestion script
+├── search.py               # Document search and retrieval script
+├── setup.py                # LLM service configuration script
+├── config/                 # Configuration management
+├── core/                   # Business logic and domain entities
 │   ├── domain/             # Domain models (Document, Chunk)
-│   ├── interfaces/          # Abstract interfaces
+│   ├── interfaces/         # Abstract interfaces
 │   └── use_cases/          # Business use cases
-├── infrastructure/          # External dependencies
+├── infrastructure/         # External dependencies
 │   ├── database/           # Database models and repositories
 │   ├── services/           # AI service implementations
 │   └── text_processing/    # PDF and text processing
 └── presentation/           # User interface (CLI)
+    ├── cli/                # Command-line interface components
+    └── prompts/            # AI prompt templates
 ```
+
+### Root Scripts Purpose
+
+- **`chat.py`**: Interactive chat interface that allows users to have conversations with the document database using natural language queries
+- **`ingest.py`**: Command-line tool for ingesting PDF documents into the vector database with configurable chunking parameters
+- **`search.py`**: Search tool that performs semantic search on ingested documents and returns AI-generated responses
+- **`setup.py`**: Configuration utility for selecting and setting up the preferred LLM service (OpenAI, Google Gemini, or auto-detection)
 
 ## Prerequisites
 

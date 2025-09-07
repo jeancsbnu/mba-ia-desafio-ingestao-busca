@@ -9,93 +9,93 @@ class SearchPromptTemplate:
 
     # Base template for search prompts
     BASE_TEMPLATE = """
-CONTEXTO:
-{context}
+        CONTEXTO:
+        {context}
 
-REGRAS:
-- Responda somente com base no CONTEXTO fornecido.
-- Se a informação não estiver explicitamente no CONTEXTO, responda:
-  "Não tenho informações necessárias para responder sua pergunta."
-- Nunca invente ou use conhecimento externo.
-- Nunca produza opiniões ou interpretações além do que está escrito.
-- Mantenha as respostas concisas e diretas.
-- Use linguagem clara e objetiva.
+        REGRAS:
+        - Responda somente com base no CONTEXTO fornecido.
+        - Se a informação não estiver explicitamente no CONTEXTO, responda:
+        "Não tenho informações necessárias para responder sua pergunta."
+        - Nunca invente ou use conhecimento externo.
+        - Nunca produza opiniões ou interpretações além do que está escrito.
+        - Mantenha as respostas concisas e diretas.
+        - Use linguagem clara e objetiva.
 
-EXEMPLOS DE PERGUNTAS FORA DO CONTEXTO:
-Pergunta: "Qual é a capital da França?"
-Resposta: "Não tenho informações necessárias para responder sua pergunta."
+        EXEMPLOS DE PERGUNTAS FORA DO CONTEXTO:
+        Pergunta: "Qual é a capital da França?"
+        Resposta: "Não tenho informações necessárias para responder sua pergunta."
 
-Pergunta: "Quantos clientes temos em 2024?"
-Resposta: "Não tenho informações necessárias para responder sua pergunta."
+        Pergunta: "Quantos clientes temos em 2024?"
+        Resposta: "Não tenho informações necessárias para responder sua pergunta."
 
-Pergunta: "Você acha isso bom ou ruim?"
-Resposta: "Não tenho informações necessárias para responder sua pergunta."
+        Pergunta: "Você acha isso bom ou ruim?"
+        Resposta: "Não tenho informações necessárias para responder sua pergunta."
 
-PERGUNTA DO USUÁRIO:
-{question}
+        PERGUNTA DO USUÁRIO:
+        {question}
 
-RESPONDA A "PERGUNTA DO USUÁRIO":
-"""
+        RESPONDA A "PERGUNTA DO USUÁRIO":
+    """
 
     # Template for specific document types
     DOCUMENT_SPECIFIC_TEMPLATE = """
-CONTEXTO (Documento: {document_name}):
-{context}
+        CONTEXTO (Documento: {document_name}):
+        {context}
 
-REGRAS:
-- Responda somente com base no CONTEXTO fornecido.
-- Se a informação não estiver explicitamente no CONTEXTO, responda:
-  "Não tenho informações necessárias para responder sua pergunta."
-- Nunca invente ou use conhecimento externo.
-- Nunca produza opiniões ou interpretações além do que está escrito.
-- Mantenha as respostas concisas e diretas.
-- Use linguagem clara e objetiva.
+        REGRAS:
+        - Responda somente com base no CONTEXTO fornecido.
+        - Se a informação não estiver explicitamente no CONTEXTO, responda:
+        "Não tenho informações necessárias para responder sua pergunta."
+        - Nunca invente ou use conhecimento externo.
+        - Nunca produza opiniões ou interpretações além do que está escrito.
+        - Mantenha as respostas concisas e diretas.
+        - Use linguagem clara e objetiva.
 
-PERGUNTA DO USUÁRIO:
-{question}
+        PERGUNTA DO USUÁRIO:
+        {question}
 
-RESPONDA A "PERGUNTA DO USUÁRIO":
-"""
+        RESPONDA A "PERGUNTA DO USUÁRIO":
+    """
 
     # Template for technical/scientific documents
     TECHNICAL_TEMPLATE = """
-CONTEXTO TÉCNICO:
-{context}
+        CONTEXTO TÉCNICO:
+        {context}
 
-REGRAS:
-- Responda somente com base no CONTEXTO fornecido.
-- Se a informação não estiver explicitamente no CONTEXTO, responda:
-  "Não tenho informações necessárias para responder sua pergunta."
-- Use terminologia técnica apropriada quando presente no contexto.
-- Cite números, datas e fatos específicos quando disponíveis.
-- Mantenha precisão técnica nas respostas.
-- Nunca invente ou use conhecimento externo.
+        REGRAS:
+        - Responda somente com base no CONTEXTO fornecido.
+        - Se a informação não estiver explicitamente no CONTEXTO, responda:
+        "Não tenho informações necessárias para responder sua pergunta."
+        - Use terminologia técnica apropriada quando presente no contexto.
+        - Cite números, datas e fatos específicos quando disponíveis.
+        - Mantenha precisão técnica nas respostas.
+        - Nunca invente ou use conhecimento externo.
 
-PERGUNTA DO USUÁRIO:
-{question}
+        PERGUNTA DO USUÁRIO:
+        {question}
 
-RESPONDA A "PERGUNTA DO USUÁRIO":
-"""
+        RESPONDA A "PERGUNTA DO USUÁRIO":
+    """
 
     # Template for business/financial documents
     BUSINESS_TEMPLATE = """
-CONTEXTO EMPRESARIAL:
-{context}
+        CONTEXTO EMPRESARIAL:
+        {context}
 
-REGRAS:
-- Responda somente com base no CONTEXTO fornecido.
-- Se a informação não estiver explicitamente no CONTEXTO, responda:
-  "Não tenho informações necessárias para responder sua pergunta."
-- Use números e dados específicos quando disponíveis.
-- Cite datas e períodos quando relevantes.
-- Mantenha precisão nos valores financeiros e métricas.
-- Nunca invente ou use conhecimento externo.
+        REGRAS:
+        - Responda somente com base no CONTEXTO fornecido.
+        - Se a informação não estiver explicitamente no CONTEXTO, responda:
+        "Não tenho informações necessárias para responder sua pergunta."
+        - Use números e dados específicos quando disponíveis.
+        - Cite datas e períodos quando relevantes.
+        - Mantenha precisão nos valores financeiros e métricas.
+        - Nunca invente ou use conhecimento externo.
 
-PERGUNTA DO USUÁRIO:
-{question}
+        PERGUNTA DO USUÁRIO:
+        {question}
 
-RESPONDA A "PERGUNTA DO USUÁRIO":
-"""
+        RESPONDA A "PERGUNTA DO USUÁRIO":
+    """
 
     @classmethod
     def format_prompt(
@@ -156,22 +156,22 @@ RESPONDA A "PERGUNTA DO USUÁRIO":
         context_text = cls._format_context(context)
 
         summary_template = """
-CONTEXTO:
-{context}
+            CONTEXTO:
+            {context}
 
-TAREFA:
-Crie um resumo conciso do contexto acima que responda à seguinte pergunta:
+            TAREFA:
+            Crie um resumo conciso do contexto acima que responda à seguinte pergunta:
 
-PERGUNTA: {question}
+            PERGUNTA: {question}
 
-INSTRUÇÕES:
-- Baseie-se apenas no contexto fornecido
-- Seja conciso e direto
-- Organize as informações de forma lógica
-- Destaque os pontos mais relevantes para a pergunta
+            INSTRUÇÕES:
+            - Baseie-se apenas no contexto fornecido
+            - Seja conciso e direto
+            - Organize as informações de forma lógica
+            - Destaque os pontos mais relevantes para a pergunta
 
-RESUMO:
-"""
+            RESUMO:
+        """
 
         return summary_template.format(context=context_text, question=question)
 
@@ -183,21 +183,21 @@ RESUMO:
         context_text = cls._format_context(context)
 
         analysis_template = """
-CONTEXTO:
-{context}
+            CONTEXTO:
+            {context}
 
-ANÁLISE SOLICITADA:
-{question}
+            ANÁLISE SOLICITADA:
+            {question}
 
-INSTRUÇÕES PARA ANÁLISE:
-- Analise o contexto fornecido
-- Identifique padrões, tendências ou insights relevantes
-- Forneça uma análise estruturada e objetiva
-- Baseie-se apenas nas informações disponíveis no contexto
-- Se não houver informações suficientes, indique claramente
+            INSTRUÇÕES PARA ANÁLISE:
+            - Analise o contexto fornecido
+            - Identifique padrões, tendências ou insights relevantes
+            - Forneça uma análise estruturada e objetiva
+            - Baseie-se apenas nas informações disponíveis no contexto
+            - Se não houver informações suficientes, indique claramente
 
-ANÁLISE:
-"""
+            ANÁLISE:
+        """
 
         return analysis_template.format(context=context_text, question=question)
 
