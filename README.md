@@ -287,20 +287,15 @@ docker-compose up -d
 Before starting, ensure you have completed the installation steps and run this quick check:
 
 ```bash
-# 1. Check if system is ready (shows configuration, database status, and AI services)
-./status.sh
-
-# 2. Verify Docker containers are running
-docker-compose ps
-
-# 3. Set PYTHONPATH (only needed for advanced Python commands)
+# 1. Set PYTHONPATH
 export PYTHONPATH=$(pwd)
-```
 
-**Expected Output:**
-- System should show "Configuration: Valid" and "Database: Connected"
-- At least one AI service should be "Configured" (OpenAI or Gemini)
-- Docker should show postgres container as "Up"
+# 2. Check system status
+python -m src.presentation.cli.interface status
+
+# 3. Verify Docker is running
+docker-compose ps
+```
 
 ### 1. Configure AI Service Preference
 ```bash
@@ -329,10 +324,6 @@ python -m src.config.database
 
 ### 4. Test System
 ```bash
-# Quick status check
-./status.sh
-
-# Or use the detailed CLI command
 python -m src.presentation.cli.interface status
 ```
 
@@ -432,10 +423,7 @@ PYTHONPATH=$(pwd) python -m src.presentation.cli.interface chat
 # Show all available commands
 PYTHONPATH=$(pwd) python -m src.presentation.cli.interface --help
 
-# Check system status (simple way)
-./status.sh
-
-# Or detailed status check
+# Check system status
 PYTHONPATH=$(pwd) python -m src.presentation.cli.interface status
 
 # List ingested documents
@@ -601,10 +589,7 @@ settings = Settings(
 
 4. **API Key Errors**
    ```bash
-   # Check system status and configuration
-   ./status.sh
-   
-   # Or detailed status check
+   # Verify environment variables
    PYTHONPATH=$(pwd) python -m src.presentation.cli.interface status
    
    # Check if .env file exists and has correct keys
@@ -684,16 +669,13 @@ settings = Settings(
 export LOG_LEVEL=DEBUG
 PYTHONPATH=$(pwd) python src/ingest.py document.pdf
 
-# Check system status (simple way)
-./status.sh
-
-# Or detailed status check
+# Check system status with details
 PYTHONPATH=$(pwd) python -m src.presentation.cli.interface status
 ```
 
 ### Getting Help
 
-1. **Check System Status**: Always run `./status.sh` first (or `PYTHONPATH=$(pwd) python -m src.presentation.cli.interface status` for detailed output)
+1. **Check System Status**: Always run `PYTHONPATH=$(pwd) python -m src.presentation.cli.interface status` first
 2. **Validate Configuration**: Ensure your `.env` file has valid API keys
 3. **Test with Small Files**: Start with small PDF files to test the system
 4. **Check Logs**: Look for error messages in the console output
