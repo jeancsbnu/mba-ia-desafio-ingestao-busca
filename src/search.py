@@ -9,7 +9,12 @@ Usage: python src/search.py "<question>" [--limit 10]
 import asyncio
 import sys
 import argparse
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Add parent directory to Python path for imports
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from src.core.use_cases.search_documents import SearchDocumentsUseCase
 from src.config.database import init_database

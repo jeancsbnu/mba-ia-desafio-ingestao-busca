@@ -8,7 +8,12 @@ Usage: python src/chat.py
 
 import asyncio
 import sys
+from pathlib import Path
 from dotenv import load_dotenv
+
+# Add parent directory to Python path for imports
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from src.core.use_cases.search_documents import SearchDocumentsUseCase
 from src.config.database import init_database
