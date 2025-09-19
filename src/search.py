@@ -1,16 +1,65 @@
 import os
 from dotenv import load_dotenv
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_postgres import PGVector
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.runnables import RunnablePassthrough
-from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
-PROMPT_TEMPLATE = """
-CONTEXTO:
-{contexto}
+def search_documents(query, k=10):
+    """
+    Busca documentos similares no banco vetorial
+    
+    Args:
+        query (str): Pergunta do usuário
+        k (int): Número de resultados a retornar (default=10)
+    
+    Returns:
+        list: Lista de tuplas (documento, score)
+    """
+    
+    # Configurar embeddings (mesmo modelo usado na ingestão)
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2",
+        model_kwargs={'device': 'cpu'}
+    )
+    
+    # Conectar ao banco vetorial
+    store = PGVector(
+        embeddings=embeddings,
+        collection_name=os.getenv("PGVECTOR_COLLECTION"),
+        connection=os.getenv("PGVECTOR_URL"),
+        use_jsonb=True,
+    )
+    
+    # Buscar documentos com score (conforme especificação)
+    results = store.similarity_search_with_score(query, k=k)
+    
+    return results
+
+def answer_question(query):
+    """
+    Responde uma pergunta baseada no conteúdo do PDF
+    
+    Args:
+        query (str): Pergunta do usuário
+        
+    Returns:
+        str: Resposta baseada no contexto ou mensagem padrão
+    """
+    
+    # Buscar os 10 resultados mais relevantes
+    results = search_documents(query, k=10)
+    
+    if not results:
+        return "Não tenho informações necessárias para responder sua pergunta."
+    
+    # Concatenar contexto dos documentos encontrados
+    context = "\n\n".join([doc.page_content for doc, score in results])
+    
+    # Template do prompt conforme especificação
+    prompt_template = """CONTEXTO:
+{context}
 
 REGRAS:
 - Responda somente com base no CONTEXTO.
@@ -30,53 +79,24 @@ Pergunta: "Você acha isso bom ou ruim?"
 Resposta: "Não tenho informações necessárias para responder sua pergunta."
 
 PERGUNTA DO USUÁRIO:
-{pergunta}
+{question}
 
-RESPONDA A "PERGUNTA DO USUÁRIO"
-"""
-
-def format_docs(docs):
-    return "\n\n".join(doc.page_content for doc in docs)
-
-def search_prompt(question=None):
+RESPONDA A "PERGUNTA DO USUÁRIO\""""
+    
+    # Montar prompt final
+    prompt = prompt_template.format(context=context, question=query)
+    
+    # Configurar LLM
+    llm = ChatGoogleGenerativeAI(
+        model=os.getenv("GOOGLE_LLM_MODEL", "gemini-2.5-flash-lite"),
+        google_api_key=os.getenv("GOOGLE_API_KEY"),
+        temperature=0
+    )
+    
+    # Chamar LLM e retornar resposta
     try:
-        # Configurar embeddings do Google
-        embeddings = GoogleGenerativeAIEmbeddings(
-            model=os.getenv("GOOGLE_EMBEDDING_MODEL", "models/embedding-001"),
-            google_api_key=os.getenv("GOOGLE_API_KEY")
-        )
-        
-        # Configurar store do PGVector
-        store = PGVector(
-            embeddings=embeddings,
-            collection_name=os.getenv("PGVECTOR_COLLECTION"),
-            connection=os.getenv("PGVECTOR_URL"),
-            use_jsonb=True,
-        )
-        
-        # Configurar retriever
-        retriever = store.as_retriever(search_kwargs={"k": 5})
-        
-        # Configurar LLM do Google
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-2.5-flash-lite",
-            google_api_key=os.getenv("GOOGLE_API_KEY"),
-            temperature=0
-        )
-        
-        # Criar prompt template
-        prompt = ChatPromptTemplate.from_template(PROMPT_TEMPLATE)
-        
-        # Criar chain RAG
-        rag_chain = (
-            {"contexto": retriever | format_docs, "pergunta": RunnablePassthrough()}
-            | prompt
-            | llm
-            | StrOutputParser()
-        )
-        
-        return rag_chain
-        
+        response = llm.invoke(prompt)
+        return response.content if hasattr(response, 'content') else str(response)
     except Exception as e:
-        print(f"Erro ao configurar RAG chain: {e}")
-        return None
+        print(f"Erro ao chamar LLM: {e}")
+        return "Não tenho informações necessárias para responder sua pergunta."

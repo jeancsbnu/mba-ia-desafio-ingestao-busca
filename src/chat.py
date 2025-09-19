@@ -1,44 +1,42 @@
-from search import search_prompt
+from search import answer_question
 
 def main():
-    print("=== Sistema de Busca RAG ===")
-    print("Inicializando sistema...")
+    """
+    Interface CLI para interação com o usuário conforme especificação
+    """
     
-    chain = search_prompt()
-
-    if not chain:
-        print("Não foi possível iniciar o chat. Verifique os erros de inicialização.")
-        return
-    
-    print("Sistema pronto! Digite suas perguntas (digite 'sair' para encerrar)")
-    print("-" * 50)
-    
-    while True:
-        try:
-            pergunta = input("\n🤔 Sua pergunta: ").strip()
+    try:
+        while True:
+            # Solicitar pergunta do usuário (formato exato da especificação)
+            print("Faça sua pergunta:")
+            print()
+            question = input("PERGUNTA: ").strip()
             
-            if pergunta.lower() in ['sair', 'exit', 'quit', 'q']:
-                print("👋 Até mais!")
+            # Verificar se usuário quer sair
+            if question.lower() in ['quit', 'exit', 'sair', 'q', '']:
                 break
             
-            if not pergunta:
-                print("Por favor, digite uma pergunta válida.")
-                continue
-            
-            print("🔍 Buscando informações...")
-            
-            # Invocar a chain RAG
-            resposta = chain.invoke(pergunta)
-            
-            print(f"\n💡 Resposta:")
-            print(resposta)
-            print("-" * 50)
-            
-        except KeyboardInterrupt:
-            print("\n👋 Chat encerrado pelo usuário.")
-            break
-        except Exception as e:
-            print(f"❌ Erro ao processar pergunta: {e}")
+            # Processar pergunta usando search.py
+            try:
+                response = answer_question(question)
+                print(f"RESPOSTA: {response}")
+                print()
+                print("---")
+                print()
+            except Exception as e:
+                print("RESPOSTA: Não tenho informações necessárias para responder sua pergunta.")
+                print()
+                print("---")
+                print()
+                
+    except KeyboardInterrupt:
+        print("\n\nSaindo...")
+    except Exception as e:
+        print(f"\nErro: {e}")
+        print("Verifique se:")
+        print("- O banco PostgreSQL está rodando (docker compose up -d)")
+        print("- Os documentos foram ingeridos (python src/ingest.py)")
+        print("- As variáveis de ambiente estão configuradas")
 
 if __name__ == "__main__":
     main()
