@@ -21,6 +21,29 @@
 
 ### Teste de execução
 ![Teste](image.png)
+
+### ENV
+
+Preencher variáveis com as chaves de acesso
+
+EMBEDDING_PROVIDER="openai"
+# EMBEDDING_PROVIDER="gemini"
+
+# GOOGLE_API_KEY=
+# GOOGLE_EMBEDDING_MODEL='models/embedding-001'
+# GOOGLE_LLM_MODEL='gemini-2.5-flash-lite'
+
+OPENAI_API_KEY=
+OPENAI_EMBEDDING_MODEL='text-embedding-3-small'
+OPENAI_LLM_MODEL='gpt-5-nano'
+
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/rag"
+PG_VECTOR_COLLECTION_NAME="docs_pdf"
+
+PDF_PATH="./document.pdf"
+
+CHUNK_SIZE=1000
+CHUNK_OVERLAP=150
 ===========================================
 #### Requisitos
 1. Ingestão do PDF
