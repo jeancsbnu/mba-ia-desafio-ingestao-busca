@@ -26,12 +26,11 @@
 
 Preencher variáveis com as chaves de acesso
 
-EMBEDDING_PROVIDER="openai"
-# EMBEDDING_PROVIDER="gemini"
+EMBEDDING_PROVIDER="openai/gemini"
 
-# GOOGLE_API_KEY=
-# GOOGLE_EMBEDDING_MODEL='models/embedding-001'
-# GOOGLE_LLM_MODEL='gemini-2.5-flash-lite'
+GOOGLE_API_KEY=
+GOOGLE_EMBEDDING_MODEL='models/embedding-001'
+GOOGLE_LLM_MODEL='gemini-2.5-flash-lite'
 
 OPENAI_API_KEY=
 OPENAI_EMBEDDING_MODEL='text-embedding-3-small'
