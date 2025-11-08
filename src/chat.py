@@ -4,6 +4,7 @@ from search import search_prompt
 def main():
     print("=" * 60)
     print("🤖 Sistema de Busca Semântica em PDF")
+    print("Aluno: Luiz Fernando Calazans Pereira Filho")
     print("=" * 60)
     provider = os.getenv("AI_PROVIDER", "openai")
     print(f"📡 Provider: {provider.upper()}")
@@ -15,9 +16,9 @@ def main():
     if not chain:
         print("Não foi possível iniciar o chat. Verifique os erros de inicialização.")
         print("Possíveis erros:")
-        print("- O banco de dados PostgreSQL NÂO está rodando")
-        print("- As variáveis de ambiente estão configuradas CORRETAMENNTE no .env")
-        print("- A ingestão do PDF NÂO foi executada com sucesso")
+        print("- PostgreSQL db não está up")
+        print("- As variáveis de ambiente estão configuradas incorretamente no .env")
+        print("- A ingestão do PDF não foi executada com sucesso")
         return
     
     print("Sistema inicializado com sucesso!")
