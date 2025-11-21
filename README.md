@@ -72,14 +72,14 @@ Edite o arquivo `.env` e configure suas credenciais:
 ```env
 AI_PROVIDER=openai
 OPENAI_API_KEY=sk-your-api-key-here
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/vectordb
+DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/rag
 ```
 
 **Para Google Gemini:**
 ```env
 AI_PROVIDER=gemini
 GOOGLE_API_KEY=your-google-api-key-here
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/vectordb
+DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/rag
 ```
 
 ### 5. Subir o Banco de Dados
@@ -223,7 +223,6 @@ docker compose down -v
 
 ## 📝 Notas Importantes
 
-- O script `ingest.py` remove dados anteriores ao executar (`pre_delete_collection=True`)
 - O sistema responde apenas com base no conteúdo do PDF processado
 - Perguntas fora do contexto retornarão a mensagem padrão de "informações não disponíveis"
 - O processo de ingestão pode demorar dependendo do tamanho do PDF
