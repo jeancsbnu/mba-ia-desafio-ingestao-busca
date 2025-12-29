@@ -44,7 +44,7 @@ def format_docs_simple(docs: list[Document]):
 
 def retrieve(question): 
   db = get_database_connection()
-  results = db.similarity_search_with_score(question, k=10)
+  results = db.similarity_search_with_score(question, k=40)
   return results
 
 def search_prompt(question: str):
