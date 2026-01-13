@@ -1,0 +1,30 @@
+[project]
+name = "mba-ia-desafio-ingestao-busca"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Your Name",email = "you@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "langchain (==0.3.27)",
+    "python-dotenv (==1.1.1)",
+    "pypdf (==6.0.0)",
+    "langchain-community (==0.3.27)",
+    "langchain-google-genai (==2.1.9)",
+    "langchain-postgres (==0.0.15)",
+    "psycopg (==3.2.9)",
+    "psycopg-binary (==3.2.9)",
+    "langchain-openai (==0.3.30)"
+]
+
+[tool.poetry]
+packages = [{include = "ollama_langchain", from = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.12,<4.0.0"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
